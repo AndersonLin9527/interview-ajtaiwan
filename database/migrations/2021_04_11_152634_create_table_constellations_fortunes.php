@@ -38,6 +38,8 @@ class CreateTableConstellationsFortunes extends Migration
       $table->tinyInteger('status');
       // 12
       $table->text('memo')->nullable();
+      // 13
+      $table->date('created_date');
       //
       $table->timestamps();
     });

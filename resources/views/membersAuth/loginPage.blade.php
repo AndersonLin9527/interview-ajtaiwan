@@ -31,10 +31,31 @@
       </div>
       <button class="w-100 btn btn-lg btn-primary" type="submit">登入</button>
       @csrf
-      <?php
-//      dump(session()->all());
-      ?>
     </form>
     <p class="mt-5 mb-3 text-center text-muted">&copy; <?=date('Y')?></p>
   </main>
+
+  @if(session('message')=='registerSuccess')
+
+    {{-- Modal 註冊成功 --}}
+    <div class="modal fade" id="modal-registerSuccess" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header alert-success">
+            <h5 class="modal-title" id="exampleModalLabel">註冊成功</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            請使用方才註冊的帳號密碼進行登入！
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      let modalRegisterSuccess = new bootstrap.Modal(document.getElementById('modal-registerSuccess'));
+      modalRegisterSuccess.show();
+    </script>
+
+  @endif
+
 @endsection

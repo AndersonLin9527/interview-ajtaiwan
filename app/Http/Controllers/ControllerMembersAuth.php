@@ -87,4 +87,14 @@ class ControllerMembersAuth extends Controller
     return view('membersAuth.registerPage');
   }
 
+  /**
+   * 會員註冊
+   *
+   * @author Anderson 2021-04-11
+   */
+  public function register()
+  {
+    return 'register';
+  }
+
 }

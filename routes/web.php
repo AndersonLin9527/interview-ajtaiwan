@@ -23,6 +23,9 @@ Route::middleware(['guest'])->group(function () {
   // 會員註冊頁
   Route::get('/registerPage', 'App\Http\Controllers\ControllerMembersAuth@registerPage')
     ->name('membersAuth.registerPage');
+  // 會員註冊
+  Route::post('/register', 'App\Http\Controllers\ControllerMembersAuth@register')
+    ->name('membersAuth.register');
 });
 
 // 會員登出

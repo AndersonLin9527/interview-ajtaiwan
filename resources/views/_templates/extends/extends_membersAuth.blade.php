@@ -11,7 +11,7 @@
   {{-- Bootstrap bundle JS --}}
   <script src="<?=asset('plugin/bootstrap/5.0.0-beta3/js/bootstrap.bundle.min.js');?>"></script>
 
-  <link href="<?=asset('css/style.css');?>" rel="stylesheet">
+  <link href="<?=asset('css/style_membersAuth.css');?>" rel="stylesheet">
   @yield('htmlHeadStyle')
 </head>
 <body class="@yield('htmlBodyClass')">

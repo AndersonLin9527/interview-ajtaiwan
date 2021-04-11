@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Schedule;
 
+use App\Models\Constellations_Fortunes;
 use Illuminate\Console\Command;
 
 class ConstellationCrawler extends Command
@@ -36,42 +37,41 @@ class ConstellationCrawler extends Command
    */
   public function handle()
   {
-    // 當天日期
-    //● 星座名稱
-    //● 整體運勢的評分及說明
-    //● 愛情運勢的評分及說明
-    //● 事業運勢的評分及說明
-    //● 財運運勢的評分及說明
-
-    // astros[0]="牡羊座";
-    // astros[1]="金牛座";
-    // astros[2]="雙子座";
-    // astros[3]="巨蟹座";
-    // astros[4]="獅子座";
-    // astros[5]="處女座";
-    // astros[6]="天秤座";
-    // astros[7]="天蠍座";
-    // astros[8]="射手座";
-    // astros[9]="摩羯座";
-    // astros[10]="水瓶座";
-    // astros[11]="雙魚座";
+    $Constellations_Fortunes = new Constellations_Fortunes();
 
     // 取得星座資料, 資料來源 https://astro.click108.com.tw/
     $constellations = config('constellations');
 
     foreach ($constellations as $constellationId => $constellationName) {
 
+      $constellationsFortunesData = [];
+      $constellationsFortunesData['name'] = $constellationName;
+      $constellationsFortunesData['fortune_score'] = null;
+      $constellationsFortunesData['fortune_desc'] = null;
+      $constellationsFortunesData['love_score'] = null;
+      $constellationsFortunesData['love_desc'] = null;
+      $constellationsFortunesData['career_score'] = null;
+      $constellationsFortunesData['career_desc'] = null;
+      $constellationsFortunesData['wealth_score'] = null;
+      $constellationsFortunesData['wealth_desc'] = null;
+      $constellationsFortunesData['status'] = 1;
+      $constellationsFortunesData['memo'] = null;
+      $constellationsFortunesData['created_date'] = date('Y-m-d');
+
       $curl = curl_init();
       $url = 'https://astro.click108.com.tw/daily_10.php?iAstro=' . $constellationId;
       curl_setopt($curl, CURLOPT_URL, $url);
       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+      curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
       $response = curl_exec($curl);
-
-      // todo
+      // curl 失敗時
       if ($response == false) {
-        $this->error($constellationName . ' curl failure');
+        $constellationsFortunesData['status'] = 0;
+        $constellationsFortunesData['memo'] = curl_error($curl);
+        $Constellations_Fortunes->create($constellationsFortunesData);
+        continue;
       }
-
       curl_close($curl);
 
       $fortunes = [];
@@ -80,9 +80,9 @@ class ConstellationCrawler extends Command
       $fortunes['career'] = '事業運勢';
       $fortunes['wealth'] = '財運運勢';
 
-      foreach ($fortunes as $fortune) {
+      foreach ($fortunes as $fortuneKey => $fortuneName) {
         // 運勢
-        $fortune_pos_start = strpos($response, $fortune);
+        $fortune_pos_start = strpos($response, $fortuneName);
         $fortune_pos_close = $fortune_pos_start + 12;
         // 運勢評分 ★★★☆☆
         $fortune_rank = substr($response, $fortune_pos_close, 15);
@@ -94,12 +94,14 @@ class ConstellationCrawler extends Command
         $fortune_description_length = $fortune_description_pos_close - $fortune_description_pos_start;
         $fortune_description = substr($response, $fortune_description_pos_start, $fortune_description_length);
 
-        $this->comment($constellationName . ' ' . $fortune . ' ' . $fortune_rank . ' ' . $fortune_score);
-        $this->info($fortune_description);
-      }
-      $this->line('===================================================');
-    }
+        $constellationsFortunesData[$fortuneKey . '_score'] = $fortune_score;
+        $constellationsFortunesData[$fortuneKey . '_desc'] = $fortune_description;
 
-    $this->line('exit');
+//        for debug
+//        $this->comment($constellationName . ' ' . $fortuneName . ' ' . $fortune_rank . ' ' . $fortune_score);
+//        $this->info($fortune_description);
+      }
+      $Constellations_Fortunes->create($constellationsFortunesData);
+    }
   }
 }

@@ -24,9 +24,31 @@
 
 ### Topic2 星座爬蟲
 
+每日凌晨 02:00 撰寫網路爬蟲並將十二星座資訊儲存至資料庫
+
+- 當天日期
+  
+- 星座名稱
+  
+- 整體運勢的評分及說明
+  
+- 愛情運勢的評分及說明
+  
+- 事業運勢的評分及說明
+  
+- 財運運勢的評分及說明
+
 #### 關鍵程式
 
-> todo
+- 爬蟲程式：app/Console/Commands/Schedule/ConstellationCrawler.php
+
+- Model：app/Models/Constellations_Fortunes.php
+
+  我知道正常物件命名應該採取大駝峰 (ConstellationsFortunes)，但是容易跟其他物件名稱相同，
+
+  所以，個人的習慣是 Model 物件採用大駝峰+蛇底式命名 (Constellations_Fortunes)，
+  
+  這樣可以快速知道呼叫的物件一定是 Model。
 
 #### DB Schema
 
@@ -50,8 +72,9 @@
 | 10 | wealth_desc   | text                |         | 財運運勢說明 | o        |         |                     |
 | 11 | status        | tinyInteger         |         | 狀態         | x        |         | 0 => 失敗, 1=> 成功 |
 | 12 | memo          | text                |         | 備註         | o        |         |                     |
-| 13 | created_at    | timestamp           |         | 新增於       | x        |         |                     |
-| 14 | updated_at    | timestamp           |         | 更新於       | x        |         |                     |
+| 12 | created_date  | date                |         | 新增日期     | x        |         | yyyy-mm-dd          |
+| 13 | created_at    | timestamp           |         | 新增於       | x        |         | yyyy-mm-dd hh:mm:ss |
+| 14 | updated_at    | timestamp           |         | 更新於       | x        |         | yyyy-mm-dd hh:mm:ss |
 
 - 資料結構說明：
 

@@ -35,8 +35,8 @@ Route::get('/logout', 'App\Http\Controllers\ControllerMembersAuth@logout')
 // middleware 阻擋未登入的 admins 進入後台
 Route::middleware(['auth:members'])->group(function () {
 
-  Route::get('/', function () {
-    return view('global.index');
-  })->name('global.index');
+  // 首頁
+  Route::get('/', 'App\Http\Controllers\ControllerGlobal@index')
+    ->name('global.index');
 
 });

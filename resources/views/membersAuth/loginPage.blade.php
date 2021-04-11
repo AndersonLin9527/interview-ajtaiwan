@@ -1,23 +1,5 @@
 @extends('_templates.extends.extends_membersAuth')
 @section('htmlHeadTitle','登入頁 - '.config('env.APP_NAME'))
-@section('htmlHeadStyle')
-  <style>
-    /*.form-signin {*/
-    /*  width: 100%;*/
-    /*  max-width: 330px;*/
-    /*  padding: 15px;*/
-    /*  margin: auto;*/
-    /*}*/
-
-    /*.form-signin .checkbox {*/
-    /*  font-weight: 400;*/
-    /*}*/
-
-    /*.form-signin .form-floating:focus-within {*/
-    /*  z-index: 2;*/
-    /*}*/
-  </style>
-@endsection
 @section('htmlBody')
   <main class="form-signin">
     <form action="<?=route('membersAuth.login')?>" enctype="multipart/form-data" method="post">

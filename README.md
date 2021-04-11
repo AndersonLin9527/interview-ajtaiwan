@@ -18,7 +18,30 @@
 
 ----------------------------------------------------------
 
-### Topic1
+### Topic1 會員登入與註冊
+
+#### DB Schema
+
+請使用 `php artisan migrate` 建立相關 DB
+
+- 資料表：members
+
+- 資料結構：
+
+| #  | name           | type                | index   | description | nullable | default | memo                |
+|----|----------------|---------------------|---------|-------------|----------|---------|---------------------|
+| 01 | id             | unsignedBigInteger  | primary |             | x        |         |                     |
+| 02 | username       | string(50)          | unique  | 會員帳號    | x        |         |                     |
+| 03 | password       | string(255)         |         | 會員密碼    | x        |         |                     |
+| 04 | name           | string(50)          |         | 會員姓名    | x        |         |                     |
+| 05 | sex            | unsignedTinyInteger | index   | 會員性別    | o        |         | 0 => 女, 1=> 男     |
+| 06 | birthday       | date                |         | 會員生日    | o        |         | yyyy-mm-dd          |
+| 07 | email          | string(255)         |         | 會員信箱    | o        |         |                     |
+| 08 | remember_token | string(100)         |         | 記住我      | o        |         |                     |
+| 09 | last_login_ip  | timestamp           |         | 最後登入ip  | o        |         |                     |
+| 10 | last_login_at  | timestamp           |         | 最後登入於  | o        |         | yyyy-mm-dd hh:mm:ss |
+| 11 | created_at     | timestamp           |         | 新增於      | x        |         | yyyy-mm-dd hh:mm:ss |
+| 12 | updated_at     | timestamp           |         | 更新於      | x        |         | yyyy-mm-dd hh:mm:ss |
 
 ----------------------------------------------------------
 
@@ -76,10 +99,10 @@
 | 13 | created_at    | timestamp           |         | 新增於       | x        |         | yyyy-mm-dd hh:mm:ss |
 | 14 | updated_at    | timestamp           |         | 更新於       | x        |         | yyyy-mm-dd hh:mm:ss |
 
-- 資料結構說明：
+#### DB Schema 說明
 
-  - 欄位 #03~10 設定 nullable 是為了避免爬蟲失敗，儲存 DB 失敗 (sql error)
-  
-  - 欄位 #11 status 會記錄每次爬蟲的狀態 ( 0 => 失敗, 1=> 成功 )
-  
-  - 欄位 #12 memo 當爬蟲失敗 (#11 status = 0) 記錄失敗原因
+- 欄位 #03~10 設定 nullable 是為了避免爬蟲失敗，儲存 DB 失敗 (sql error)
+
+- 欄位 #11 status 會記錄每次爬蟲的狀態 ( 0 => 失敗, 1=> 成功 )
+
+- 欄位 #12 memo 當爬蟲失敗 (#11 status = 0) 記錄失敗原因

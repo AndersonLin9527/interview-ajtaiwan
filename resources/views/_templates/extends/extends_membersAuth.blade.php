@@ -12,7 +12,7 @@
   {{-- jQuery 3.3.1 --}}
   <script src="<?=asset('plugin/jquery/3.3.1/jquery.min.js');?>"></script>
   <link href="<?=asset('css/style_membersAuth.css');?>" rel="stylesheet">
-  @yield('htmlHeadStyle')
+  @yield('htmlHeadPlugin')
 </head>
 <body class="@yield('htmlBodyClass')">
 @yield('htmlBody')

@@ -10,6 +10,21 @@ use Illuminate\Database\Eloquent\Model;
  * Class Constellations_Fortunes
  * @package App\Models
  * @mixin Builder
+ * @property mixed id
+ * @property mixed name
+ * @property mixed fortune_score
+ * @property mixed fortune_desc
+ * @property mixed love_score
+ * @property mixed love_desc
+ * @property mixed career_score
+ * @property mixed career_desc
+ * @property mixed wealth_score
+ * @property mixed wealth_desc
+ * @property mixed status
+ * @property mixed memo
+ * @property mixed created_date
+ * @property mixed created_at
+ * @property mixed updated_at
  */
 class Constellations_Fortunes extends Model
 {

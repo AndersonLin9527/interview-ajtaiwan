@@ -10,18 +10,18 @@ use Illuminate\Foundation\Auth\User as AuthUser;
  * Class Members
  * @package App\Models
  * @mixin Builder
- * @property mixed $id
- * @property mixed $username
- * @property mixed $password
- * @property mixed $name
- * @property mixed $sex
- * @property mixed $birthday
- * @property mixed $email
- * @property mixed $remember_token
- * @property mixed $last_login_at
- * @property mixed $last_login_ip
- * @property mixed $created_at
- * @property mixed $updated_at
+ * @property mixed id
+ * @property mixed username
+ * @property mixed password
+ * @property mixed name
+ * @property mixed sex
+ * @property mixed birthday
+ * @property mixed email
+ * @property mixed remember_token
+ * @property mixed last_login_at
+ * @property mixed last_login_ip
+ * @property mixed created_at
+ * @property mixed updated_at
  */
 class Members extends AuthUser
 {

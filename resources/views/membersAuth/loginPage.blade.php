@@ -1,5 +1,15 @@
+<?php
+/**
+ * Parameter from Controller
+ * @var string $googleReCaptchaV3SiteKey config('google.reCAPTCHAv3.site_key');
+ * @var string $googleReCaptchaV3InputName config('google.reCAPTCHAv3.input_name');
+ */
+?>
 @extends('_templates.extends.extends_membersAuth')
 @section('htmlHeadTitle','登入頁 - '.config('env.APP_NAME'))
+@section('htmlHeadPlugin')
+  <script src="https://www.google.com/recaptcha/api.js?render=<?=$googleReCaptchaV3SiteKey;?>"></script>
+@endsection
 @section('htmlBody')
   <main class="form-signin">
     <form action="<?=route('membersAuth.login')?>" enctype="multipart/form-data" method="post">
@@ -31,14 +41,15 @@
       </div>
       <button class="w-100 btn btn-lg btn-primary" type="submit">登入</button>
       @csrf
+      {{-- google reCaptchaV3 token --}}
+      <input name="<?=$googleReCaptchaV3InputName;?>" type="hidden">
     </form>
     <p class="mt-5 mb-3 text-center text-muted">&copy; <?=date('Y')?></p>
   </main>
-
+  {{-- Modal 註冊成功 --}}
   @if(session('message')=='registerSuccess')
-
-    {{-- Modal 註冊成功 --}}
-    <div class="modal fade" id="modal-registerSuccess" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-registerSuccess" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header alert-success">
@@ -55,7 +66,18 @@
       let modalRegisterSuccess = new bootstrap.Modal(document.getElementById('modal-registerSuccess'));
       modalRegisterSuccess.show();
     </script>
-
   @endif
-
+  <script>
+    let form = $('form');
+    form.submit(function (event) {
+      event.preventDefault();
+      grecaptcha.ready(function () {
+        grecaptcha.execute('<?=$googleReCaptchaV3SiteKey;?>', {action: 'login'})
+          .then(function (token) {
+            $('input[name="<?=$googleReCaptchaV3InputName;?>"]').val(token);
+            form.unbind('submit').submit();
+          });
+      });
+    });
+  </script>
 @endsection

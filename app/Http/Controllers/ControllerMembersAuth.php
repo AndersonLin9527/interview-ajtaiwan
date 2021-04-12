@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Members;
+use App\Services\Google\GoogleReCaptchaV3;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,9 +18,15 @@ class ControllerMembersAuth extends Controller
    * @return View
    * @author Anderson 2021-04-11
    */
-  public function loginPage()
+  public function loginPage(): View
   {
-    return view('membersAuth.loginPage');
+    $googleReCaptchaV3SiteKey = config('google.reCAPTCHAv3.site_key');
+    $googleReCaptchaV3InputName = config('google.reCAPTCHAv3.input_name');
+    $data = [
+      'googleReCaptchaV3SiteKey' => $googleReCaptchaV3SiteKey,
+      'googleReCaptchaV3InputName' => $googleReCaptchaV3InputName,
+    ];
+    return view('membersAuth.loginPage', $data);
   }
 
   /**
@@ -36,31 +43,44 @@ class ControllerMembersAuth extends Controller
     $password = $request->input('password');
     $remember_me = $request->input('remember_me');
     $remember_me = $remember_me == '1';
+    // 登入失敗代碼
+    $loginFailureCode = null;
 
-    // 確認帳號大小寫吻合
+    // Google ReCaptchaV3 驗證
+    $GoogleReCaptchaV3 = new GoogleReCaptchaV3();
+    $GoogleReCaptchaV3->setToken($request->input(config('google.reCAPTCHAv3.input_name')));
+    $GoogleReCaptchaV3->setRemoteIp($request->getClientIp());
+    $captchaStatus = $GoogleReCaptchaV3->captcha();
+
+    // Google ReCaptchaV3 驗證失敗時,直接返回
+    if (!$captchaStatus) {
+      $loginFailureCode = 'Google_ReCaptchaV3_failure';
+      return redirect()->back()->withErrors(['loginFailureCode' => $loginFailureCode]);
+    }
+
+    // DB Member 資料驗證
     $Members = new Members();
+
+    // DB Member 驗證帳號大小寫吻合
     $loginMember = $Members->whereRaw("BINARY `username`= ?", [$username])->first();
 
-    // 登入錯誤訊息
-    $loginErrorCode = null;
-
     if (is_null($loginMember)) {
-      // 帳號不存在
-      $loginErrorCode = 'Members_is_null';
+      // DB Member 帳號不存在
+      $loginFailureCode = 'Members_is_null';
     } elseif (!password_verify($password, $loginMember->password)) {
-      // 密碼錯誤
-      $loginErrorCode = 'Members_invalid_password';
+      // DB Member 密碼錯誤
+      $loginFailureCode = 'Members_invalid_password';
     }
 
-    if (!is_null($loginErrorCode)) {
-      return redirect()->back()->withErrors(['loginErrorCode' => $loginErrorCode]);
+    if (!is_null($loginFailureCode)) {
+      return redirect()->back()->withErrors(['loginFailureCode' => $loginFailureCode]);
     }
 
+    // 帳號驗證成功
     $loginMember->update([
       'last_login_ip' => $request->getClientIp(),
       'last_login_at' => date('Y-m-d H:i:s'),
     ]);
-
     Auth::guard('members')->login($loginMember, $remember_me);
     return redirect()->intended(route('global.index'));
   }

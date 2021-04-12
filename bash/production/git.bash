@@ -26,10 +26,10 @@ sudo git fetch --all
 sudo git pull
 
 echoNowAction "composer install"
-sudo composer install
+sudo -u "nginx" composer install
 
-echoNowAction "Change Dir ${ProjectDir}/storage/ Owner to nginx"
-sudo chown -R nginx.nginx "${ProjectDir}/storage/"
+echoNowAction "Change Dir ${ProjectDir} Owner to nginx"
+sudo chown -R nginx.nginx "${ProjectDir}"
 
 close_at=$(date +%s)
 run_time=$((close_at - start_at))

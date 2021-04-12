@@ -3,6 +3,18 @@
  * Parameter from Controller
  * @var Illuminate\Contracts\Pagination\LengthAwarePaginator $constellationsFortunes
  */
+
+/**
+ * 轉換分數為星級
+ *
+ * @param int $score
+ * @return string
+ * @author Anderson 2021-04-12
+ */
+function convertScoreToStar(int $score): string
+{
+  return str_pad(str_repeat('★', $score), 15, '☆', STR_PAD_RIGHT);
+}
 ?>
 @extends('_templates.extends.extends_master')
 @section('htmlHeadPlugin')
@@ -50,14 +62,17 @@
               <td>{{$constellationsFortune->created_date}}</td>
               <td>{{$constellationsFortune->name}}</td>
               <td class="text-wrap">
-                <span class="fw-bolder">整體運勢 {{$constellationsFortune->fortune_score}}</span><br>
+                <span class="fw-bolder">整體運勢 <?=convertScoreToStar($constellationsFortune->fortune_score);?></span><br>
                 {{$constellationsFortune->fortune_desc}}<br>
-                <span class="fw-bolder">愛情運勢 {{$constellationsFortune->love_score}}</span><br>
+                <span class="fw-bolder">愛情運勢 <?=convertScoreToStar($constellationsFortune->love_score);?></span><br>
                 {{$constellationsFortune->love_desc}}<br>
-                <span class="fw-bolder">事業運勢 {{$constellationsFortune->career_score}}</span><br>
+                <span class="fw-bolder">事業運勢 <?=convertScoreToStar($constellationsFortune->career_score);?></span><br>
                 {{$constellationsFortune->career_desc}}<br>
-                <span class="fw-bolder">財運運勢 {{$constellationsFortune->wealth_score}}</span><br>
+                <span class="fw-bolder">財運運勢 <?=convertScoreToStar($constellationsFortune->wealth_score);?></span><br>
                 {{$constellationsFortune->wealth_desc}}<br>
+                <div class="text-end">
+                  <small class="text-muted text-end">更新於：{{$constellationsFortune->updated_at}}</small>
+                </div>
               </td>
             </tr>
           @endforeach

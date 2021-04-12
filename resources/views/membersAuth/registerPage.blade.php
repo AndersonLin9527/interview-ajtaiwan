@@ -69,27 +69,23 @@
         <label class="col-sm-3 col-form-label">生日</label>
         <div class="col-sm-9">
           <div class="input-group">
-            <label>
-              <input class="form-control" maxlength="4" name="birthday_year"
-                     onkeyup="value=value.replace(/[^\d]/g,'')" pattern="\d*" placeholder="西元" type="text"
-                     value="<?=old('birthday_year');?>">
-            </label>
-            <span class="input-group-text"></span>
-            <label>
-              <select class="form-select form-select-sm" name="birthday_month">
-                <option value="">- 請選擇 -</option>
-                @foreach(range(1,12) as $month)
-                  <option value="{{str_pad($month,2,'0',STR_PAD_LEFT )}}">{{$month}}</option>
-                @endforeach
-              </select>
-            </label>
+            <input aria-label="birthday_year" class="form-control" maxlength="4" name="birthday_year"
+                   onkeyup="value=value.replace(/[^\d]/g,'')" pattern="\d*" placeholder="西元" type="text"
+                   value="<?=old('birthday_year');?>">
+            <span class="input-group-text">年</span>
+            <select aria-label="birthday_month" class="form-select form-select-sm" name="birthday_month">
+              <option value="">- 請選擇 -</option>
+              @foreach(range(1,12) as $month)
+                <option value="{{str_pad($month,2,'0',STR_PAD_LEFT )}}">{{$month}}</option>
+              @endforeach
+            </select>
             @if(!is_null(old('birthday_month')))
               <script>
                 $('select[name="birthday_month"] option[value="<?=old('birthday_month');?>"]').prop('selected', true);
               </script>
             @endif
             <span class="input-group-text">/</span>
-            <select class="form-select form-select-sm" name="birthday_day" aria-label="Birthday Day">
+            <select aria-label="birthday_day" class="form-select form-select-sm" name="birthday_day">
               <option value="">- 請選擇 -</option>
               @foreach(range(1,30) as $day)
                 <option value="{{str_pad($day,2,'0',STR_PAD_LEFT )}}">{{$day}}</option>

@@ -46,42 +46,46 @@
         <label class="col-sm-3 col-form-label" for="sex">性別</label>
         <div class="col-sm-9 pt-2">
           <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="sex" id="inlineRadio1" value="0">
+            <input class="form-check-input" id="inlineRadio1" name="sex" type="radio" value="0">
             <label class="form-check-label" for="inlineRadio1">女</label>
           </div>
           <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="sex" id="inlineRadio2" value="1">
+            <input class="form-check-input" id="inlineRadio2" name="sex" type="radio" value="1">
             <label class="form-check-label" for="inlineRadio2">男</label>
           </div>
           <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="sex" id="inlineRadio3" value="2" disabled>
+            <input class="form-check-input" disabled id="inlineRadio3" name="sex" type="radio" value="2">
             <label class="form-check-label" for="inlineRadio3">公司</label>
           </div>
         </div>
         @if(!is_null(old('sex')))
           <script>
-            $('input[name="sex"][value="<?=old('sex');?>"]').prop("checked", true);
+            $('input[name="sex"][type="radio"][value="<?=old('sex');?>"]').prop('checked', true);
           </script>
         @endif
       </div>
       {{-- 生日 --}}
       <div class="mb-2 row">
-        <label class="col-sm-3 col-form-label" for="sex">生日</label>
+        <label class="col-sm-3 col-form-label">生日</label>
         <div class="col-sm-9">
           <div class="input-group">
-            <input aria-label="Birthday Year" class="form-control" maxlength="4" name="birthday_year"
-                   onkeyup="value=value.replace(/[^\d]/g,'')" pattern="\d*" placeholder="西元" type="text"
-                   value="<?=old('birthday_year');?>">
+            <label>
+              <input class="form-control" maxlength="4" name="birthday_year"
+                     onkeyup="value=value.replace(/[^\d]/g,'')" pattern="\d*" placeholder="西元" type="text"
+                     value="<?=old('birthday_year');?>">
+            </label>
             <span class="input-group-text"></span>
-            <select class="form-select form-select-sm" name="birthday_month" aria-label="Birthday Month">
-              <option value="">- 請選擇 -</option>
-              @foreach(range(1,12) as $month)
-                <option value="{{str_pad($month,2,'0',STR_PAD_LEFT )}}">{{$month}}</option>
-              @endforeach
-            </select>
+            <label>
+              <select class="form-select form-select-sm" name="birthday_month">
+                <option value="">- 請選擇 -</option>
+                @foreach(range(1,12) as $month)
+                  <option value="{{str_pad($month,2,'0',STR_PAD_LEFT )}}">{{$month}}</option>
+                @endforeach
+              </select>
+            </label>
             @if(!is_null(old('birthday_month')))
               <script>
-                $('select[name="birthday_month"] option[value="<?=old('birthday_month');?>"]').prop("selected", true);
+                $('select[name="birthday_month"] option[value="<?=old('birthday_month');?>"]').prop('selected', true);
               </script>
             @endif
             <span class="input-group-text">/</span>
@@ -93,7 +97,7 @@
             </select>
             @if(!is_null(old('birthday_day')))
               <script>
-                $('select[name="birthday_day"] option[value="<?=old('birthday_day');?>"]').prop("selected", true);
+                $('select[name="birthday_day"] option[value="<?=old('birthday_day');?>"]').prop('selected', true);
               </script>
             @endif
           </div>

@@ -39,4 +39,8 @@ Route::middleware(['auth:members'])->group(function () {
   Route::get('/', 'App\Http\Controllers\ControllerGlobal@index')
     ->name('global.index');
 
+  // 星座運勢 列表頁
+  Route::get('/constellationsFortunes/index', 'App\Http\Controllers\ControllerConstellationsFortunes@index')
+    ->name('constellationsFortunes.index');
+
 });

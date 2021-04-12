@@ -43,4 +43,8 @@ Route::middleware(['auth:members'])->group(function () {
   Route::get('/constellationsFortunes/index', 'App\Http\Controllers\ControllerConstellationsFortunes@index')
     ->name('constellationsFortunes.index');
 
+  // 星座運勢 執行爬蟲
+  Route::post('/constellationsFortunes/crawl', 'App\Http\Controllers\ControllerConstellationsFortunes@crawl')
+    ->name('constellationsFortunes.crawl');
+
 });

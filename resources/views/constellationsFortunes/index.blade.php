@@ -13,7 +13,7 @@
  */
 function convertScoreToStar(int $score): string
 {
-  return str_pad(str_repeat('★', $score), 15, '☆', STR_PAD_RIGHT);
+  return str_pad(str_repeat('★', $score), 15, '☆');
 }
 ?>
 @extends('_templates.extends.extends_master')
@@ -30,11 +30,87 @@ function convertScoreToStar(int $score): string
       }
       form.submit();
     }
+
+    function buttonLoading(thisButton, loadingStatus) {
+      if (loadingStatus) {
+        thisButton.prop('disabled', true);
+        thisButton.find('span.ready').addClass('d-none');
+        thisButton.find('span.spinner-border').removeClass('d-none');
+        thisButton.find('span.loading').removeClass('d-none');
+      } else {
+        thisButton.prop('disabled', false);
+        thisButton.find('span.spinner-border').addClass('d-none');
+        thisButton.find('span.loading').addClass('d-none');
+        thisButton.find('span.ready').removeClass('d-none');
+      }
+    }
+
+    // 執行 執行爬蟲
+    function ConstellationCrawler(thisButton) {
+
+      buttonLoading(thisButton, true);
+
+      const deferAjax = ConstellationCrawlerDefer();
+
+      $.when(deferAjax).then(
+        // resolve
+        function () {
+          buttonLoading(thisButton, false);
+          let modalId = 'modal-ConstellationCrawlerSuccess';
+          let modalRegisterSuccess = new bootstrap.Modal(document.getElementById(modalId), {
+            backdrop: 'static',
+            keyboard: false
+          });
+          modalRegisterSuccess.show();
+        },
+        // reject
+        function () {
+          buttonLoading(thisButton, false);
+          let modalId = 'modal-ConstellationCrawlerFailure';
+          let modalRegisterSuccess = new bootstrap.Modal(document.getElementById(modalId), {
+            backdrop: 'static',
+            keyboard: false
+          });
+          modalRegisterSuccess.show();
+        }
+      );
+    }
+
+    // 執行 執行爬蟲 Defer
+    function ConstellationCrawlerDefer() {
+
+      const ajaxDefer = $.Deferred();
+      const data = {
+        '_token': '<?=csrf_token();?>',
+        '_method': 'post',
+      };
+
+      $.ajax({
+        url: '<?=route('constellationsFortunes.crawl');?>',
+        method: 'post',
+        data: data,
+        success: function (response) {
+          ajaxDefer.resolve(response);
+        },
+        error: function (response) {
+          ajaxDefer.reject(response);
+        }
+      });
+
+      return ajaxDefer.promise();
+    }
   </script>
 @endsection
 @section('htmlBodyContain')
   <main>
-    <h2 class="display-6 text-start mb-4">星座運勢</h2>
+    <h2 class="display-6 text-start mb-4">
+      星座運勢
+      <button class="btn btn-info ms-3" onclick="ConstellationCrawler($(this));">
+        <span class="spinner-border spinner-border-sm me-1 d-none" role="status" aria-hidden="true"></span>
+        <span class="ready">執行爬蟲</span>
+        <span class="loading d-none">Loading...</span>
+      </button>
+    </h2>
     <form method="get">
       <input name="page" type="hidden" value="<?=$constellationsFortunes->currentPage();?>">
       @component('constellationsFortunes.index_paginator')
@@ -84,4 +160,36 @@ function convertScoreToStar(int $score): string
       @endcomponent
     </form>
   </main>
+
+  {{-- Modal 爬蟲成功 --}}
+  <div class="modal fade" id="modal-ConstellationCrawlerSuccess" data-bs-backdrop="static" data-bs-keyboard="false"
+       tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header alert-success">
+          <h5 class="modal-title" id="staticBackdropLabel">爬蟲成功</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          請重新整理頁面查看最新星座運勢資料！
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{-- Modal 爬蟲失敗 --}}
+  <div class="modal fade" id="modal-ConstellationCrawlerFailure" data-bs-backdrop="static" data-bs-keyboard="false"
+       tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header alert-danger">
+          <h5 class="modal-title" id="staticBackdropLabel">爬蟲失敗</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          請自行前往 <a href="https://astro.click108.com.tw/" target="_blank">click108 星座</a> 查看最新運勢。
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection

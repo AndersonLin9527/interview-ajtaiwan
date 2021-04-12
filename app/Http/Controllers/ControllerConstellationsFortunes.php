@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Constellations_Fortunes;
+use App\Services\ConstellationsFortunes\ServiceConstellationCrawler;
 use Illuminate\Http\Request;
 
 class ControllerConstellationsFortunes extends Controller
@@ -20,5 +21,13 @@ class ControllerConstellationsFortunes extends Controller
     ];
 
     return view('constellationsFortunes.index', $data);
+  }
+
+  // 星座運勢 執行爬蟲
+  public function crawl(): bool
+  {
+    $ServiceConstellationCrawler = new ServiceConstellationCrawler();
+    $ServiceConstellationCrawler->crawl();
+    return true;
   }
 }

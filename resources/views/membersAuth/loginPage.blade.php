@@ -3,6 +3,7 @@
  * Parameter from Controller
  * @var string $googleReCaptchaV3SiteKey config('google.reCAPTCHAv3.site_key');
  * @var string $googleReCaptchaV3InputName config('google.reCAPTCHAv3.input_name');
+ * @var Illuminate\Support\ViewErrorBag $errors
  */
 ?>
 @extends('_templates.extends.extends_membersAuth')
@@ -46,8 +47,8 @@
     </form>
     <p class="mt-5 mb-3 text-center text-muted">&copy; <?=date('Y')?></p>
   </main>
-  {{-- Modal 註冊成功 --}}
   @if(session('message')=='registerSuccess')
+    {{-- Modal 註冊成功 --}}
     <div class="modal fade" id="modal-registerSuccess" tabindex="-1" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
       <div class="modal-dialog">
@@ -66,6 +67,78 @@
       let modalRegisterSuccess = new bootstrap.Modal(document.getElementById('modal-registerSuccess'));
       modalRegisterSuccess.show();
     </script>
+  @elseif($errors->has('loginFailureCode'))
+    <?php
+    $loginFailureCode = $errors->first('loginFailureCode');
+    ?>
+    @if($loginFailureCode == 'Members_is_null')
+      {{-- Modal 登入失敗 (帳號不存在) --}}
+      <div class="modal fade" id="modal-loginFailure-Members_is_null" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header alert-danger">
+              <h5 class="modal-title">登入失敗</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              會員資料不存在,是否進行會員註冊？
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">取消</button>
+              <a class="btn btn-success" href="<?=route('membersAuth.registerPage');?>">會員註冊</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        let modalId = 'modal-loginFailure-Members_is_null';
+        let modalRegisterSuccess = new bootstrap.Modal(document.getElementById(modalId), {
+          backdrop: 'static',
+          keyboard: false
+        });
+        modalRegisterSuccess.show();
+      </script>
+    @elseif($loginFailureCode == 'Members_invalid_password')
+      {{-- Modal 登入失敗 (密碼錯誤) --}}
+      <div class="modal fade" id="modal-loginFailure-Members_invalid_password" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header alert-warning">
+              <h5 class="modal-title">登入失敗</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              密碼錯誤，請重新輸入。
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        let modalId = 'modal-loginFailure-Members_invalid_password';
+        let modalRegisterSuccess = new bootstrap.Modal(document.getElementById(modalId));
+        modalRegisterSuccess.show();
+      </script>
+    @elseif($loginFailureCode == 'Google_ReCaptchaV3_failure')
+      {{-- Modal 登入失敗 (Google ReCaptchaV3 驗證失敗) --}}
+      <div class="modal fade" id="modal-loginFailure-Members_invalid_password" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header alert-danger">
+              <h5 class="modal-title">登入失敗</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Google ReCaptchaV3 驗證失敗
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        let modalId = 'modal-loginFailure-Members_invalid_password';
+        let modalRegisterSuccess = new bootstrap.Modal(document.getElementById(modalId));
+        modalRegisterSuccess.show();
+      </script>
+    @endif
   @endif
   <script>
     let form = $('form');

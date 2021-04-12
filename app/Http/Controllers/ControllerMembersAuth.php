@@ -105,7 +105,13 @@ class ControllerMembersAuth extends Controller
    */
   public function registerPage(): View
   {
-    return view('membersAuth.registerPage');
+    $googleReCaptchaV3SiteKey = config('google.reCAPTCHAv3.site_key');
+    $googleReCaptchaV3InputName = config('google.reCAPTCHAv3.input_name');
+    $data = [
+      'googleReCaptchaV3SiteKey' => $googleReCaptchaV3SiteKey,
+      'googleReCaptchaV3InputName' => $googleReCaptchaV3InputName,
+    ];
+    return view('membersAuth.registerPage', $data);
   }
 
   /**
@@ -117,11 +123,23 @@ class ControllerMembersAuth extends Controller
    */
   public function register(Request $request): RedirectResponse
   {
+    // Google ReCaptchaV3 驗證
+    $GoogleReCaptchaV3 = new GoogleReCaptchaV3();
+    $GoogleReCaptchaV3->setToken($request->input(config('google.reCAPTCHAv3.input_name')));
+    $GoogleReCaptchaV3->setRemoteIp($request->getClientIp());
+    $captchaStatus = $GoogleReCaptchaV3->captcha();
+
+    // Google ReCaptchaV3 驗證失敗時,直接返回
+    if (!$captchaStatus) {
+      return redirect()->back()->withErrors(['registerFailureCode' => 'Google ReCaptchaV3 驗證失敗']);
+    }
+
     $username = $request->input('username');
     $password = $request->input('password');
     $name = $request->input('name');
     $sex = $request->input('sex');
     $birthday = $request->input('birthday_year') . '-' . $request->input('birthday_month') . '-' . $request->input('birthday_day');
+    $birthday = $birthday == '--' ? null : $birthday;
     $email = $request->input('email');
 
     $validateData = [

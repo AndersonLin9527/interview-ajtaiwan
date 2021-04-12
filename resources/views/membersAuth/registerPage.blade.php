@@ -1,10 +1,16 @@
 <?php
 /**
+ * Parameter from Controller
+ * @var string $googleReCaptchaV3SiteKey config('google.reCAPTCHAv3.site_key');
+ * @var string $googleReCaptchaV3InputName config('google.reCAPTCHAv3.input_name');
  * @var Illuminate\Support\ViewErrorBag $errors
  */
 ?>
 @extends('_templates.extends.extends_membersAuth')
 @section('htmlHeadTitle','註冊頁 - '.config('env.APP_NAME'))
+@section('htmlHeadPlugin')
+  <script src="https://www.google.com/recaptcha/api.js?render=<?=$googleReCaptchaV3SiteKey;?>"></script>
+@endsection
 @section('htmlBody')
   <main class="form-signin">
     <form action="<?=route('membersAuth.register')?>" enctype="multipart/form-data" method="post">
@@ -131,7 +137,22 @@
       {{-- 註冊 --}}
       <button class="w-100 btn btn-lg btn-success" type="submit">註冊</button>
       @csrf
+      {{-- google reCaptchaV3 token --}}
+      <input name="<?=$googleReCaptchaV3InputName;?>" type="hidden">
     </form>
     <p class="mt-5 mb-3 text-muted text-center">&copy; <?=date('Y')?></p>
   </main>
+  <script>
+    let form = $('form');
+    form.submit(function (event) {
+      event.preventDefault();
+      grecaptcha.ready(function () {
+        grecaptcha.execute('<?=$googleReCaptchaV3SiteKey;?>', {action: 'login'})
+          .then(function (token) {
+            $('input[name="<?=$googleReCaptchaV3InputName;?>"]').val(token);
+            form.unbind('submit').submit();
+          });
+      });
+    });
+  </script>
 @endsection

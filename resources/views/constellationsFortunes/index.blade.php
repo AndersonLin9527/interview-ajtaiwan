@@ -138,17 +138,24 @@ function convertScoreToStar(int $score): string
               <td>{{$constellationsFortune->created_date}}</td>
               <td>{{$constellationsFortune->name}}</td>
               <td class="text-wrap">
-                <span class="fw-bolder">整體運勢 <?=convertScoreToStar($constellationsFortune->fortune_score);?></span><br>
-                {{$constellationsFortune->fortune_desc}}<br>
-                <span class="fw-bolder">愛情運勢 <?=convertScoreToStar($constellationsFortune->love_score);?></span><br>
-                {{$constellationsFortune->love_desc}}<br>
-                <span class="fw-bolder">事業運勢 <?=convertScoreToStar($constellationsFortune->career_score);?></span><br>
-                {{$constellationsFortune->career_desc}}<br>
-                <span class="fw-bolder">財運運勢 <?=convertScoreToStar($constellationsFortune->wealth_score);?></span><br>
-                {{$constellationsFortune->wealth_desc}}<br>
-                <div class="text-end">
-                  <small class="text-muted text-end">更新於：{{$constellationsFortune->updated_at}}</small>
-                </div>
+                @if($constellationsFortune->status==1)
+                  <span class="fw-bolder">
+                    整體運勢 <?=convertScoreToStar($constellationsFortune->fortune_score);?>
+                  </span><br>
+                  {{$constellationsFortune->fortune_desc}}<br>
+                  <span class="fw-bolder">愛情運勢 <?=convertScoreToStar($constellationsFortune->love_score);?></span><br>
+                  {{$constellationsFortune->love_desc}}<br>
+                  <span class="fw-bolder">事業運勢 <?=convertScoreToStar($constellationsFortune->career_score);?></span><br>
+                  {{$constellationsFortune->career_desc}}<br>
+                  <span class="fw-bolder">財運運勢 <?=convertScoreToStar($constellationsFortune->wealth_score);?></span><br>
+                  {{$constellationsFortune->wealth_desc}}<br>
+                  <div class="text-end">
+                    <small class="text-muted text-end">更新於：{{$constellationsFortune->updated_at}}</small>
+                  </div>
+                @else
+                  <div class="text-danger">Crawler Failure</div>
+                  <div>{{$constellationsFortune->memo}}</div>
+                @endif
               </td>
             </tr>
           @endforeach

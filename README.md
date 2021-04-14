@@ -74,7 +74,7 @@
 | 06 | birthday       | date                |         | 會員生日    | o        |         | yyyy-mm-dd          |
 | 07 | email          | string(255)         |         | 會員信箱    | o        |         |                     |
 | 08 | remember_token | string(100)         |         | 記住我      | o        |         |                     |
-| 09 | last_login_ip  | timestamp           |         | 最後登入ip  | o        |         |                     |
+| 09 | last_login_ip  | string(45)          |         | 最後登入ip  | o        |         |                     |
 | 10 | last_login_at  | timestamp           |         | 最後登入於  | o        |         | yyyy-mm-dd hh:mm:ss |
 | 11 | created_at     | timestamp           |         | 新增於      | x        |         | yyyy-mm-dd hh:mm:ss |
 | 12 | updated_at     | timestamp           |         | 更新於      | x        |         | yyyy-mm-dd hh:mm:ss |
@@ -87,7 +87,7 @@
 
 內容描述:
 
-請將http://astro.click108.com.tw/當日的十二星座資料以爬蟲方式抓取,並在解析後儲存至資料庫內
+請將 [http://astro.click108.com.tw/](http://astro.click108.com.tw/) 當日的十二星座資料以爬蟲方式抓取,並在解析後儲存至資料庫內
 
 - 當天日期
 

@@ -2,7 +2,9 @@
 
 [專案 GitHub](https://github.com/AndersonLin9527/interview-ajtaiwan)
 
-[專案網址 https://interview-ajtaiwan.henxo9527.com/](https://interview-ajtaiwan.henxo9527.com/)
+~~[專案網址 https://interview-ajtaiwan.henxo9527.com/](https://interview-ajtaiwan.henxo9527.com/)~~
+
+上方網址已關閉，節省流量，請多包涵。
 
 此專案建置於本人 Anderson 申請的 Google Cloud Platform 的 VM 中，環境搭建如下：
 
